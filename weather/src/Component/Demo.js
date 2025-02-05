@@ -1,9 +1,34 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
 
-function Demo() {
+// Custom hook to manage sessionStorage
+const UseSessionStorage = (key, initialValue) => {
+  const [value, setValue] = useState(() => {
+    const storedValue = sessionStorage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : initialValue;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  return [value, setValue];
+};
+
+// Example usage
+const Demo = () => {
+  const [sessionStorageValue, setSessionStorageValue] = UseSessionStorage(
+    "mySessionStorageKey",
+    "default"
+  );
+
   return (
-    <div>Demo</div>
-  )
-}
+    <div>
+      <p>Session Storage Value: {sessionStorageValue}</p>
+      <button onClick={() => setSessionStorageValue("new value")}>
+        Change Session Storage Value
+      </button>
+    </div>
+  );
+};
 
-export default Demo
+export default Demo;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRe } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { IoSearch } from "react-icons/io5";
 
 
@@ -14,6 +14,7 @@ function Weather() {
          
         />
        <p><IoSearch/></p>
+      
       </div>
       
     </div>

@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Component/Home";
 import Weather from "./Component/Weather";
+import Demo from "./Component/Demo";
+import Local from "./Component/Local";
 
 function App() {
   return (
@@ -12,6 +14,9 @@ function App() {
           <Route path="/weather" element={<Weather />} />
         </Routes>
       </BrowserRouter>
+
+      <Demo />
+      <Local />
     </div>
   );
 }
