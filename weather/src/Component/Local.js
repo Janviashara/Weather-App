@@ -4,18 +4,23 @@ import Input from "./Input";
 
 function Local() {
  
-  const storedItems = JSON.parse(localStorage.getItem("names")) || [];
-  const [names, setName] = useState(storedItems);
-
+  const [names, setName] = useState([]);
   useEffect(() => {
-    console.log("Updating localStorage:", names);
-    localStorage.setItem("names", JSON.stringify(names));
-  }, [names]);
-
+      const localStorageItems = JSON.parse(localStorage.getItem('items'));
+      console.log(localStorageItems);
+      if (localStorageItems) {
+          setItems(localStorageItems);
+      }
+  }, []);
   return (
     <div>
       <h1>Local</h1>
       <Input items={names} setName={setName} />
+      <ul>
+        {names.map((name ,index)=>(
+          <li className="border" key={index}>{name}</li>
+        ))}
+      </ul>
     </div>
   );
 }
