@@ -1,19 +1,57 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Form({ items, setCity }) {
+function Form({ setCity }) {
   const [inputCity, setInputCity] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [weather, setWeather] = useState("Cloudy");
+  const [humidity, setHumidity] = useState("");
+  const [windspeed, setWindspeed] = useState("");
+
   const inputRef = useRef(null);
+
   const navigate = useNavigate();
+
+  // const handleAddItem = () => {
+  //   if (inputCity) {
+  //     setCity([...items, inputCity]);
+  //     setInputCity("");
+  //   }
+  // };
+
+
   const handleAddItem = () => {
-    if (inputCity) {
-      setCity([...items, inputCity]);
-      setInputCity("");
+    if (inputCity && temperature && weather && humidity && windspeed) {
+      const newCityData = {
+        city: inputCity,
+        temperature: temperature,
+        weather: weather,
+        humidity: humidity,
+        windspeed: windspeed,
+      };
+
+      setCity((prevCityData) => {
+        const updatedCity = [...prevCityData, newCityData];
+
+        // update localStorage
+        
+        localStorage.setItem("(city)", JSON.stringify(updatedCity)); 
+        return updatedCity; 
+      });
+
+    
+      setInputCity(""); 
+      setTemperature("");
+      setWeather("");
+      setHumidity("");
+      setWindspeed("");
     }
   };
+
   useEffect(() => {
     inputRef.current.focus();
   }, []);
+
   return (
     <div className="w-screen h-screen bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
       <p className="text-xl sm:text-4xl font-bold text-center p-4 text-yellow-400">
@@ -39,6 +77,7 @@ function Form({ items, setCity }) {
                   />
                 </td>
               </tr>
+
               <tr>
                 <td className="p-2">
                   <label className="text-xs sm:text-base font-semibold">
@@ -47,11 +86,36 @@ function Form({ items, setCity }) {
                 </td>
                 <td>
                   <input
-                    type="text"
+                    type="number"
                     className="border outline-none p-1 rounded"
+                    value={temperature}
+                    onChange={(e) => setTemperature(e.target.value)}
                   />
                 </td>
               </tr>
+
+              <tr>
+                <td className="p-2">
+                  <label className="text-xs sm:text-base font-semibold">
+                    Weather Condition :
+                  </label>
+                </td>
+                <td>
+                  <select
+                    className="p-1 outline-none border rounded w-full"
+                    value={weather}
+                    onChange={(e) => setWeather(e.target.value)}
+                  >
+                    <option value="Cloudy">Cloudy</option>
+                    <option value="Sunny">Sunny</option>
+                    <option value="Snow">Snow</option>
+                    <option value="Rainy">Rainy</option>
+                    <option value="Thunder">Thunder</option>
+                    <option value="Wind">Wind</option>
+                  </select>
+                </td>
+              </tr>
+
               <tr>
                 <td className="p-2">
                   <label className="text-xs sm:text-base font-semibold">
@@ -62,26 +126,12 @@ function Form({ items, setCity }) {
                   <input
                     type="number"
                     className="border outline-none p-1 rounded"
+                    value={humidity}
+                    onChange={(e) => setHumidity(e.target.value)}
                   />
                 </td>
               </tr>
-              <tr>
-                <td className="p-2">
-                  <label className="text-xs sm:text-base font-semibold">
-                    Weather Condition :
-                  </label>
-                </td>
-                <td>
-                  <select className="p-1 outline-none border rounded w-full">
-                    <option>Cloudy</option>
-                    <option>Sunny</option>
-                    <option>Snow</option>
-                    <option>Rainy</option>
-                    <option>Thunder</option>
-                    <option>Wind</option>
-                  </select>
-                </td>
-              </tr>
+
               <tr>
                 <td className="p-2">
                   <label className="text-xs sm:text-base font-semibold">
@@ -92,9 +142,12 @@ function Form({ items, setCity }) {
                   <input
                     type="number"
                     className="border outline-none p-1 rounded"
+                    value={windspeed}
+                    onChange={(e) => setWindspeed(e.target.value)}
                   />
                 </td>
               </tr>
+
             </tbody>
           </table>
           <div className="flex justify-between m-4">

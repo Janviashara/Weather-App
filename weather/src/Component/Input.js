@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 
 function Input({ items, setName }) {
-  const click = (id, name, city) => {
-    const obj = {
-      id: id,
-      name: name,
-      city: city,
-    };
-    const [inputValue, setInputValue] = useState("");
-    localStorage.setItem('items',JSON.stringify({...obj}));
-  }
-  
+  const [inputValue, setInputValue] = useState("");
+
+  const handleAddItem = () => {
+    if (inputValue) {
+      setName([...items, inputValue]); 
+      setInputValue("");  
+    }
+  };
+
   return (
     <div>
       <input
@@ -20,19 +19,11 @@ function Input({ items, setName }) {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
-      <ul>
-        {items.map((item,index) => {
-          console.log(item._id);
-          return(
-            <li key={items._id}>
-              <button onClick={() => click(item._id, item.name, item.city)}>
-                Add
-              </button>
-            </li>
-          )
-        })}
-      </ul>
-
+    
+      <button className="border border-black p-2" onClick={handleAddItem}>
+        Add item
+      </button>
+      
     </div>
   );
 }

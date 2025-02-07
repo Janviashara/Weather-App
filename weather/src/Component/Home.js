@@ -1,6 +1,8 @@
 import React from "react";
 import cloud from "./cloud.png";
 import { Link } from "react-router-dom";
+ 
+// first page 
 
 function Home() {
   return (

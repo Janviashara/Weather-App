@@ -1,17 +1,16 @@
-
 import React, { useEffect, useState } from "react";
 import Input from "./Input";
 
 function Local() {
  
-  const [names, setName] = useState([]);
+  const storedItems = JSON.parse(localStorage.getItem("names")) || [];
+  const [names, setName] = useState(storedItems);
+
   useEffect(() => {
-      const localStorageItems = JSON.parse(localStorage.getItem('items'));
-      console.log(localStorageItems);
-      if (localStorageItems) {
-          setItems(localStorageItems);
-      }
-  }, []);
+    console.log("Updating localStorage:", names);
+    localStorage.setItem("names", JSON.stringify(names));
+  }, [names]);
+
   return (
     <div>
       <h1>Local</h1>
@@ -26,3 +25,5 @@ function Local() {
 }
 
 export default Local;
+
+

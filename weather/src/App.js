@@ -4,7 +4,7 @@ import Home from "./Component/Home";
 import Weather from "./Component/Weather";
 
 import LocalStorage from "./Component/LocalStorage";
- import Local from "./Component/Local";
+//  import Local from "./Component/Local";
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
       </BrowserRouter>
 
     
-      <Local />
+      {/* <Local /> */}
      
     </div>
   );
