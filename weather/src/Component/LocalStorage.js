@@ -14,7 +14,7 @@ function LocalStorage() {
     
   return (
     <div>
-        <Form setCity={setCity}/>
+        <Form items={city} setCity={setCity}/>
     </div>
   )
 }

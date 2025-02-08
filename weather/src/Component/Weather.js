@@ -2,8 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 function Weather() {
-  const [cities, setCities] = useState([]); // Holds the city and weather data
-  const [selectedCityIndex, setSelectedCityIndex] = useState(null); 
+  const [cities, setCities] = useState([]); //hold city and weather data
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [formData, setFormData] = useState({
+    city: "",
+    temperature: "",
+    humidity: "",
+    weather: "",
+    windspeed: "",
+  });
+
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -11,23 +19,47 @@ function Weather() {
   }, []);
 
   useEffect(() => {
-    const CityData = JSON.parse(localStorage.getItem("(city)")) || []; // Empty array is used as a fallback value
+    const CityData = JSON.parse(localStorage.getItem("city")) || [];
     setCities(CityData);
   }, []);
 
   const toggleForm = (index) => {
-    setSelectedCityIndex(index === selectedCityIndex ? null : index); 
+    if (index !== null) {
+      setFormData({ ...cities[index] });
+    }
+    setSelectedCity(index); // new data set
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleUpdate = () => {
+    const updatedCities = [...cities];
+    updatedCities[selectedCity] = formData;
+    setCities(updatedCities);
+    localStorage.setItem("city", JSON.stringify(updatedCities));
+    setSelectedCity(null); //form hide
+  };
+
+  const [records, setRecords] = useState(cities);
+  const handleSearch = (e) => {
+    let query = e.target.value;
+    const newrecords = cities.filter((item) => item.city.includes(query));
+    setRecords(newrecords);
   };
 
   return (
     <div className="w-full h-full bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
       <div className="block sm:flex mx-auto">
         <input
-          type="text"
+          type="search"
           placeholder="Enter your city"
           className="border w-64 sm:w-full rounded-xl p-3 sm:mx-3 mx-2 mt-6 outline-none"
           ref={inputRef}
+          onChange={handleSearch}
         />
+
         <Link to={"/localstorage"}>
           <button className="border w-auto rounded-xl bg-white p-3 mt-6 mx-2 sm:mx-3">
             Add
@@ -68,7 +100,7 @@ function Weather() {
                 <td className="px-4 py-2">
                   <button
                     className="bg-blue-600 p-2 rounded-lg text-white"
-                    onClick={() => toggleForm(index)} // Show form when clicked
+                    onClick={() => toggleForm(index)}
                   >
                     Update
                   </button>
@@ -80,7 +112,7 @@ function Weather() {
                       const updatedCity = [...cities]; // Create a copy of the array
                       updatedCity.splice(index, 1);
                       setCities(updatedCity);
-                      localStorage.setItem("(city)", JSON.stringify(updatedCity));
+                      localStorage.setItem("city", JSON.stringify(updatedCity));
                     }}
                   >
                     Delete
@@ -92,49 +124,56 @@ function Weather() {
         </table>
       </div>
 
-     
-      {selectedCityIndex !== null && (
-        <div className="flex justify-center items-center flex-col px-4 py-6 sm:px-8">
-          <p className="text-xl sm:text-4xl font-bold text-center m-2 sm:m-6 text-yellow-400">
-            Weather Forecasting Data
-          </p>
+      {selectedCity !== null && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black  bg-opacity-50 transition-opacity duration-300">
+          <div className="w-full sm:w-96 bg-white rounded-lg shadow-lg p-6 transform duration-300 scale-100">
+            <p className="text-xl sm:text-4xl font-bold text-center m-2 sm:m-6 text-yellow-400">
+              Update Weather Data
+            </p>
 
-          <div
-            className={`w-full sm:w-96 bg-white rounded-lg shadow-lg p-6 transition-all duration-500 ease-in-out transform ${
-              selectedCityIndex !== null ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
-            }`}
-          >
             <table className="w-full">
               <tbody>
-             
                 <tr className="mb-4">
                   <td className="text-sm font-semibold text-gray-700">City:</td>
                   <td>
                     <input
                       type="text"
-                      defaultValue={cities[selectedCityIndex].city} details
-                      className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder="Enter City Name"
+                      name="city"
+                      value={formData.city} //hold to the current data
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg"
+                      required
                     />
                   </td>
                 </tr>
                 <tr className="mb-4">
-                  <td className="text-sm font-semibold text-gray-700">Temperature:</td>
+                  <td className="text-sm font-semibold text-gray-700">
+                    Temperature:
+                  </td>
                   <td>
                     <input
                       type="number"
-                      defaultValue={cities[selectedCityIndex].temperature} 
-                      className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder="Enter Temperature in °C"
+                      name="temperature"
+                      max={2}
+                      min={1}
+                      value={formData.temperature}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg"
+                      required
                     />
                   </td>
                 </tr>
                 <tr className="mb-4">
-                  <td className="text-sm font-semibold text-gray-700">Weather Condition:</td>
+                  <td className="text-sm font-semibold text-gray-700">
+                    Weather Condition:
+                  </td>
                   <td>
                     <select
-                      className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      defaultValue={cities[selectedCityIndex].weather} 
+                      name="weather"
+                      value={formData.weather}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg"
+                      required
                     >
                       <option value="Cloudy">Cloudy</option>
                       <option value="Sunny">Sunny</option>
@@ -146,24 +185,32 @@ function Weather() {
                   </td>
                 </tr>
                 <tr className="mb-4">
-                  <td className="text-sm font-semibold text-gray-700">Humidity:</td>
+                  <td className="text-sm font-semibold text-gray-700">
+                    Humidity:
+                  </td>
                   <td>
                     <input
                       type="number"
-                      defaultValue={cities[selectedCityIndex].humidity} 
-                      className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder="Enter Humidity Percentage"
+                      name="humidity"
+                      value={formData.humidity}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg"
+                      required
                     />
                   </td>
                 </tr>
                 <tr className="mb-4">
-                  <td className="text-sm font-semibold text-gray-700">Wind Speed:</td>
+                  <td className="text-sm font-semibold text-gray-700">
+                    Wind Speed:
+                  </td>
                   <td>
                     <input
                       type="number"
-                      defaultValue={cities[selectedCityIndex].windspeed} // Pre-fill wind speed
-                      className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder="Enter Wind Speed in km/h"
+                      name="windspeed"
+                      value={formData.windspeed}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded-lg"
+                      required
                     />
                   </td>
                 </tr>
@@ -172,14 +219,14 @@ function Weather() {
 
             <div className="flex justify-between mt-6">
               <button
-                type="submit"
-                className="bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 w-full sm:w-auto text-center"
+                onClick={handleUpdate}
+                className="bg-indigo-600 text-white sm:p-3 p-2 rounded-lg hover:bg-indigo-700 w-full sm:w-auto"
               >
                 Save & Update
               </button>
               <button
-                onClick={() => toggleForm(null)} 
-                className="bg-gray-300 text-gray-800 p-3 rounded-lg hover:bg-gray-400 w-full sm:w-auto text-center"
+                onClick={() => toggleForm(null)}
+                className="bg-gray-300 text-gray-800 sm:p-3 p-2 rounded-lg hover:bg-gray-400 w-full sm:w-auto"
               >
                 Cancel
               </button>

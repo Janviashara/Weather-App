@@ -23,7 +23,6 @@ function Input({ items, setName }) {
       <button className="border border-black p-2" onClick={handleAddItem}>
         Add item
       </button>
-      
     </div>
   );
 }
