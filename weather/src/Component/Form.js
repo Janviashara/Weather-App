@@ -9,17 +9,7 @@ function Form({ setCity }) {
   const [windspeed, setWindspeed] = useState("");
 
   const inputRef = useRef(null);
-
   const navigate = useNavigate();
-
-  // const handleAddItem = () => {
-  //   if (inputCity) {
-  //     setCity([...items, inputCity]);
-  //     setInputCity("");
-  //   }
-  // };
-
-
   const handleAddItem = () => {
     if (inputCity && temperature && weather && humidity && windspeed) {
       const newCityData = {
@@ -34,13 +24,12 @@ function Form({ setCity }) {
         const updatedCity = [...prevCityData, newCityData];
 
         // update localStorage
-        
-        localStorage.setItem("(city)", JSON.stringify(updatedCity)); 
-        return updatedCity; 
+
+        localStorage.setItem("city", JSON.stringify(updatedCity));
+        return updatedCity;
       });
 
-    
-      setInputCity(""); 
+      setInputCity("");
       setTemperature("");
       setWeather("");
       setHumidity("");
@@ -57,99 +46,80 @@ function Form({ setCity }) {
       <p className="text-xl sm:text-4xl font-bold text-center p-4 text-yellow-400">
         Weather Forecasting
       </p>
-      <div className="flex justify-center items-center mt-4 ">
-        <form className="border rounded-md sm:p-3 m-2 sm:m-0 bg-white ">
-          <table className="m-2">
-            <tbody>
-              <tr>
-                <td className="p-2">
-                  <label className="text-xs sm:text-base font-semibold">
-                    City :
-                  </label>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    className="border outline-none p-1 rounded"
-                    value={inputCity}
-                    ref={inputRef}
-                    onChange={(e) => setInputCity(e.target.value)}
-                  />
-                </td>
-              </tr>
+      <div className="flex justify-center items-center mt-4">
+        <form className="border rounded-md sm:p-3 p-2 m-2 bg-white ">
+          <label className="text-base font-semibold">City </label>
+          <input
+            type="text"
+            className="border outline-none p-1 rounded mb-2 w-full"
+            value={inputCity}
+            ref={inputRef}
+            onChange={(e) => setInputCity(e.target.value)}
+          />
 
-              <tr>
-                <td className="p-2">
-                  <label className="text-xs sm:text-base font-semibold">
-                    Temperature :
-                  </label>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    className="border outline-none p-1 rounded"
-                    value={temperature}
-                    onChange={(e) => setTemperature(e.target.value)}
-                  />
-                </td>
-              </tr>
+          <br />
 
-              <tr>
-                <td className="p-2">
-                  <label className="text-xs sm:text-base font-semibold">
-                    Weather Condition :
-                  </label>
-                </td>
-                <td>
-                  <select
-                    className="p-1 outline-none border rounded w-full"
-                    value={weather}
-                    onChange={(e) => setWeather(e.target.value)}
-                  >
-                    <option value="Cloudy">Cloudy</option>
-                    <option value="Sunny">Sunny</option>
-                    <option value="Snow">Snow</option>
-                    <option value="Rainy">Rainy</option>
-                    <option value="Thunder">Thunder</option>
-                    <option value="Wind">Wind</option>
-                  </select>
-                </td>
-              </tr>
+          <label className="text-base font-semibold">Temperature </label>
+          <input
+            type="number"
+            className="border outline-none p-1 rounded mb-2 w-full"
+            value={temperature}
+            // onChange={(e) => setTemrature(e.target.value)}
+            onChange={(e) => {
+              let value = e.target.value;
+              if (value === "-" || (value >= -99 && value <= 99)) {
+                setTemperature(value);
+              }
+            }}
+          />
+          <br />
 
-              <tr>
-                <td className="p-2">
-                  <label className="text-xs sm:text-base font-semibold">
-                    Humidity :
-                  </label>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    className="border outline-none p-1 rounded"
-                    value={humidity}
-                    onChange={(e) => setHumidity(e.target.value)}
-                  />
-                </td>
-              </tr>
+          <label className="text-base font-semibold mr-3 sm:mr-0">
+            Weather Condition{" "}
+          </label>
+          <select
+            className="p-1 outline-none border rounded mb-2 w-full "
+            value={weather}
+            onChange={(e) => setWeather(e.target.value)}
+          >
+            <option value="Cloudy">Cloudy</option>
+            <option value="Sunny">Sunny</option>
+            <option value="Snow">Snow</option>
+            <option value="Rainy">Rainy</option>
+            <option value="Thunder">Thunder</option>
+            <option value="Wind">Wind</option>
+          </select>
+          <br />
 
-              <tr>
-                <td className="p-2">
-                  <label className="text-xs sm:text-base font-semibold">
-                    Wind speed :
-                  </label>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    className="border outline-none p-1 rounded"
-                    value={windspeed}
-                    onChange={(e) => setWindspeed(e.target.value)}
-                  />
-                </td>
-              </tr>
+          <label className="text-base font-semibold">Humidity </label>
 
-            </tbody>
-          </table>
+          <input
+            type="number"
+            className="border outline-none p-1 rounded mb-2 w-full"
+            value={humidity}
+            onChange={(e) => {
+              let value = e.target.value;
+              if (value === "-" || (value >= -99 && value <= 99)) {
+                setHumidity(value);
+              }
+            }}
+          />
+
+          <br />
+          <label className="text-base font-semibold">Wind speed </label>
+
+          <input
+            type="number"
+            className="border outline-none p-1 rounded w-full"
+            value={windspeed}
+            onChange={(e) => {
+              let value = e.target.value;
+              if (value === "-" || (value >= -99 && value <= 110)) {
+                setWindspeed(value);
+              }
+            }}
+          />
+          <br />
           <div className="flex justify-between m-4">
             <button
               type="submit"

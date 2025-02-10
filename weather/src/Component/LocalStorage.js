@@ -8,7 +8,7 @@ function LocalStorage() {
 
     useEffect(()=>{
         console.log("Add city :",city)
-        localStorage.setItem("city",JSON.stringify(city));
+        localStorage.setItem("(city)",JSON.stringify(city));
     },[city])
 
     

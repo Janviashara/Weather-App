@@ -10,6 +10,13 @@ function Input({ items, setName }) {
     }
   };
 
+  // const handleAddItem = () => {
+  //   if (inputCity) {
+  //     setCity([...items, inputCity]);
+  //     setInputCity("");
+  //   }
+  // };
+
   return (
     <div>
       <input
