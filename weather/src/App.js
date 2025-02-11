@@ -4,7 +4,7 @@ import Home from "./Component/Home";
 import Weather from "./Component/Weather";
 
 import LocalStorage from "./Component/LocalStorage";
- import Local from "./Component/Local";
+//  import Local from "./Component/Local";import Person from "./Component/Person";
 
 function App() {
   return (
@@ -15,8 +15,7 @@ function App() {
           <Route path="/weather" element={<Weather />} />
           <Route path="/localstorage" element={<LocalStorage />} />
         </Routes>
-      </BrowserRouter>
-
+      </BrowserRouter>     
       {/* <Local /> */}
     </div>
   );

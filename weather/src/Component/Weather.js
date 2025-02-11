@@ -16,7 +16,6 @@ function Weather() {
   // const  keys = ["city"]
   // console.log(cities[1]["city"])
 
- 
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -36,10 +35,29 @@ function Weather() {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+              
+    if (name === "temperature" || "windspeed" || "humidity" ) {
+      if (Number(value) >= -99 && Number(value) <= 99) {
+        setFormData({ ...formData, [name]: value });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
-
+  const handleData  =(e) =>{
+   setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
   const handleUpdate = () => {
+    if (
+      !formData.city ||
+      !formData.temperature ||
+      !formData.humidity ||
+      !formData.windspeed
+    ) {
+      alert("All fields are required!");
+      return;
+    }
     const updatedCities = [...cities];
     updatedCities[selectedCity] = formData;
     setCities(updatedCities);
@@ -69,7 +87,7 @@ function Weather() {
       <p className="text-xl sm:text-4xl font-bold text-center m-2 sm:m-6 text-yellow-400">
         Weather Forecasting Data
       </p>
-
+      {/* <p className="font-bold text-xl p-2 text-yellow-400 text-center">Enter Data To click on Add Button</p> */}
       <div className="overflow-x-auto p-2 ">
         <table className="w-full border">
           <thead className="bg-gray-300">
@@ -84,59 +102,65 @@ function Weather() {
               <th className="px-4 py-3">Delete</th>
             </tr>
           </thead>
-         
+
           <tbody>
-         
-            {cities.filter((city) =>city.city.toLowerCase().includes(search.toLowerCase())).length === 0 ? 
-             //.filter((city) => city.toLowerCase().includes(search.toLowerCase()))
-            ( <p className="font-bold text-2xl p-1 text-nowrap">Enter valid city</p>) :
-             (cities
-              .filter((city) =>city.city.toLowerCase().includes(search.toLowerCase()))
-               .map((city, index) => (
-                <tr
-                  key={index}
-                  className="text-center border even:bg-gray-200 odd:bg-slate-100"
-                >
-                  
-                  <td>{index}</td>
-                  <td>{city.city}</td>
-                  <td>{city.temperature}°C</td>
-                  <td>{city.weather}</td>
-                  <td>{city.humidity}%</td>
-                  <td>{city.windspeed} km/h</td>
-                  <td className="px-4 py-2">
-                    <button
-                      className="bg-blue-600 p-2 rounded-lg text-white"
-                      onClick={() => toggleForm(index)}
-                    >
-                      Update
-                    </button>
-                  </td>
-                  <td className="px-4 py-2">
-                    <button
-                      className="bg-red-600 p-2 rounded-lg"
-                      onClick={() => {
-                        const updatedCity = [...cities]; // Create a copy of the array
-                        updatedCity.splice(index, 1);
-                        setCities(updatedCity);
-                        localStorage.setItem(
-                          "city",
-                          JSON.stringify(updatedCity)
-                        );
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              )))}
+            {cities.filter((city) =>
+              city.city.toLowerCase().includes(search.toLowerCase())
+            ).length === 0 ? (
+              //.filter((city) => city.toLowerCase().includes(search.toLowerCase()))
+              <p className="font-bold text-2xl p-1  text-center text-nowrap ">
+                Enter valid city data
+              </p>
+            ) : (
+              cities
+                .filter((city) =>
+                  city.city.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((city, index) => (
+                  <tr
+                    key={index}
+                    className="text-center border even:bg-gray-200 odd:bg-slate-100"
+                  >
+                    <td>{index}</td>
+                    <td>{city.city}</td>
+                    <td>{city.temperature}°C</td>
+                    <td>{city.weather}</td>
+                    <td>{city.humidity}%</td>
+                    <td>{city.windspeed} km/h</td>
+                    <td className="px-4 py-2">
+                      <button
+                        className="bg-blue-600 p-2 rounded-lg text-white"
+                        onClick={() => toggleForm(index)}
+                      >
+                        Update
+                      </button>
+                    </td>
+                    <td className="px-4 py-2">
+                      <button
+                        className="bg-red-600 p-2 rounded-lg"
+                        onClick={() => {
+                          const updatedCity = [...cities]; // Create a copy of the array
+                          updatedCity.splice(index, 1);
+                          setCities(updatedCity);
+                          localStorage.setItem(
+                            "city",
+                            JSON.stringify(updatedCity)
+                          );
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+            )}
           </tbody>
         </table>
       </div>
-
+{/* update form */}
       {selectedCity !== null && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black  bg-opacity-50 transition-opacity duration-300">
-          <div className="w-full sm:w-96 bg-white rounded-lg shadow-lg p-6 transform duration-300 scale-100">
+          <div className="w-full sm:w-96 bg-white rounded-lg shadow-lg p-6 transform duration-300 transition-all transition-discrete scale-100">
             <p className="text-xl sm:text-4xl font-bold text-center m-2 sm:m-6 text-yellow-400">
               Update Weather Data
             </p>
@@ -144,16 +168,9 @@ function Weather() {
             <form
               className="w-full"
               onSubmit={(e) => {
-                e.preventDefault();
-                if (
-                  !formData.city ||
-                  !formData.temperature ||
-                  !formData.humidity ||
-                  !formData.windspeed
-                ) {
-                  alert("All fields are required!");
-                  return;
-                }
+                e.preventDefault(); 
+                handleUpdate();
+                handleData();
               }}
             >
               <label className="text-base font-semibold text-gray-700">
@@ -163,7 +180,7 @@ function Weather() {
                 type="text"
                 name="city"
                 value={formData.city || ""} //hold to the current data
-                onChange={handleChange}
+                onChange={handleData}
                 className="w-full p-2 border rounded-lg"
               />
               <br />
@@ -173,8 +190,6 @@ function Weather() {
               <input
                 type="number"
                 name="temperature"
-                max={2}
-                min={1}
                 value={formData.temperature || ""}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg m-1"
@@ -186,7 +201,7 @@ function Weather() {
               <select
                 name="weather"
                 value={formData.weather}
-                onChange={handleChange}
+                onChange={handleData}
                 className="w-full p-2 border rounded-lg m-1"
               >
                 <option value="Cloudy">Cloudy</option>

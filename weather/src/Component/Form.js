@@ -19,16 +19,12 @@ function Form({ setCity }) {
         humidity: humidity,
         windspeed: windspeed,
       };
-
       setCity((prevCityData) => {
         const updatedCity = [...prevCityData, newCityData];
-
         // update localStorage
-
         localStorage.setItem("city", JSON.stringify(updatedCity));
         return updatedCity;
       });
-
       setInputCity("");
       setTemperature("");
       setWeather("");
@@ -36,7 +32,6 @@ function Form({ setCity }) {
       setWindspeed("");
     }
   };
-
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -56,9 +51,7 @@ function Form({ setCity }) {
             ref={inputRef}
             onChange={(e) => setInputCity(e.target.value)}
           />
-
           <br />
-
           <label className="text-base font-semibold">Temperature </label>
           <input
             type="number"
@@ -73,7 +66,6 @@ function Form({ setCity }) {
             }}
           />
           <br />
-
           <label className="text-base font-semibold mr-3 sm:mr-0">
             Weather Condition{" "}
           </label>
@@ -104,7 +96,6 @@ function Form({ setCity }) {
               }
             }}
           />
-
           <br />
           <label className="text-base font-semibold">Wind speed </label>
 
